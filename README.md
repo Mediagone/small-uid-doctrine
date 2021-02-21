@@ -27,20 +27,20 @@ If you're using this package in a Symfony project, register _Small UID_ custom t
 doctrine:
     dbal:
         types:
-            app_smalluid: Mediagone\Doctrine\Common\SmallUid\SmallUid
+            smalluid: Mediagone\SmallUid\Doctrine\SmallUidType
 ```
-_Note: `app_smalluid` being the type name you'll use in your Entity mappings, you can pick whatever name you wish._
+_Note: `smalluid` being the type name you'll use in your Entity mappings, you can pick whatever name you wish._
 
 
 ### As standalone
 Custom types can also be used separately, but need to be registered in Doctrine DBAL like this:
 ```php
 use Doctrine\DBAL\Types\Type;
-use Mediagone\Doctrine\SmallUid\SmallUidType;
+use Mediagone\SmallUid\Doctrine\SmallUidType;
 
 Type::addType(SmallUidType::NAME, SmallUidType::class);
 // or, with a custom name:
-Type::addType('app_smalluid', SmallUidType::class);
+Type::addType('smalluid', SmallUidType::class);
 ```
 
 
