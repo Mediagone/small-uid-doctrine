@@ -67,7 +67,7 @@ final class SmallUidTypeTest extends TestCase
         $uid = SmallUid::random();
         $value = $this->type->convertToDatabaseValue($uid, new MySqlPlatform());
         
-        self::assertSame(hex2bin($uid->toHex()->toString()), $value);
+        self::assertSame(hex2bin((string)$uid->toHex()), $value);
     }
     
     
@@ -91,11 +91,11 @@ final class SmallUidTypeTest extends TestCase
     
     public function test_can_convert_value_from_database() : void
     {
-        $value = SmallUid::random()->toHex()->toString();
+        $value = (string)SmallUid::random()->toHex();
         $id = $this->type->convertToPHPValue(hex2bin($value), new MySqlPlatform());
         
         self::assertInstanceOf(SmallUid::class, $id);
-        self::assertSame($value, $id->toHex()->toString());
+        self::assertSame($value, (string)$id->toHex());
     }
     
     
