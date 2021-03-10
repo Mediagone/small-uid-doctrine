@@ -4,7 +4,7 @@ namespace Mediagone\SmallUid\Doctrine;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use Mediagone\Common\Types\Text\Hex;
+use Mediagone\Types\Common\System\Hex;
 use Mediagone\SmallUid\SmallUid;
 use function is_a;
 
