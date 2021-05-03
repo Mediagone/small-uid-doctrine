@@ -127,7 +127,7 @@ final class SmallUidTypeTest extends TestCase
     public function test_can_register_automatically() : void
     {
         self::assertFalse(Type::hasType('app_customuid'), 'Type should not be registered yet.');
-        SmallUidType::registerDoctrineTypeForClass(CustomUid::class);
+        SmallUidType::registerTypeForClass(CustomUid::class);
         self::assertTrue(Type::hasType('app_customuid'), 'Type should be registered!');
         
         $type = Type::getType('app_customuid');

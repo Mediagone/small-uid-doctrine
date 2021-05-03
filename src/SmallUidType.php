@@ -37,7 +37,7 @@ class SmallUidType extends Type
     //
     //========================================================================================================
     
-    final public static function registerDoctrineTypeForClass(string $classFqcn, string $prefix = 'app_') : void
+    final public static function registerTypeForClass(string $classFqcn, string $prefix = 'app_') : void
     {
         if (! class_exists($classFqcn)) {
             throw new LogicException("The uid class doesn't exists ($classFqcn)");
