@@ -15,7 +15,7 @@ final class InvalidUidType extends SmallUidType
         return self::NAME;
     }
     
-    protected static function getClassName() : string
+    public function getClassName() : string
     {
         return get_class(new class() { });
     }

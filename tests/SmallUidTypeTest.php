@@ -120,5 +120,42 @@ final class SmallUidTypeTest extends TestCase
     }
     
     
+    //========================================================================================================
+    // Custom type
+    //========================================================================================================
+    
+    public function test_can_register_automatically() : void
+    {
+        self::assertFalse(Type::hasType('app_customuid'), 'Type should not be registered yet.');
+        SmallUidType::registerDoctrineTypeForClass(CustomUid::class);
+        self::assertTrue(Type::hasType('app_customuid'), 'Type should be registered!');
+        
+        $type = Type::getType('app_customuid');
+        self::assertInstanceOf(SmallUidType::class, $type);
+        self::assertSame('app_customuid', $type->getName());
+        self::assertSame(CustomUid::class, $type->getClassName());
+    }
+    
+    
+    
+    public function test_can_convert_custom_uid_from_database() : void
+    {
+        $type = Type::getType('app_customuid');
+        
+        $value = CustomUid::random()->toHex()->toBinary();
+        $id = $type->convertToPHPValue($value, new MySqlPlatform());
+        
+        self::assertInstanceOf(CustomUid::class, $id);
+        self::assertSame($value, $id->toHex()->toBinary());
+    }
+    
+    
+    public function test_can_convert_null_custom_uid_value_from_database() : void
+    {
+        $type = Type::getType('app_customuid');
+        
+        $id = $type->convertToPHPValue(null, new MySqlPlatform());
+        self::assertNull($id);
+    }
     
 }

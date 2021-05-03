@@ -4,9 +4,13 @@ namespace Mediagone\SmallUid\Doctrine;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use Mediagone\Types\Common\System\Hex;
+use LogicException;
 use Mediagone\SmallUid\SmallUid;
+use Mediagone\Types\Common\System\Hex;
+use ReflectionClass;
+use function class_exists;
 use function is_a;
+use function strtolower;
 
 
 class SmallUidType extends Type
@@ -16,6 +20,44 @@ class SmallUidType extends Type
     //========================================================================================================
     
     public const NAME = 'common_smalluid';
+    
+    
+    
+    //========================================================================================================
+    // Properties
+    //========================================================================================================
+    
+    private ?string $classFqcn = null;
+    
+    private ?string $typeName = null;
+    
+    
+    
+    //========================================================================================================
+    //
+    //========================================================================================================
+    
+    final public static function registerDoctrineTypeForClass(string $classFqcn, string $prefix = 'app_') : void
+    {
+        if (! class_exists($classFqcn)) {
+            throw new LogicException("The uid class doesn't exists ($classFqcn)");
+        }
+        
+        if (! is_a($classFqcn, SmallUid::class, true)) {
+            throw new LogicException("The uid class must extends SmallUid ($classFqcn)");
+        }
+        
+        $uidTypeName = $prefix.strtolower((new ReflectionClass($classFqcn))->getShortName());
+        if (Type::hasType($uidTypeName)) {
+            return;
+        }
+        
+        Type::addType($uidTypeName, self::class);
+        
+        $type = Type::getType($uidTypeName);
+        $type->classFqcn = $classFqcn;
+        $type->typeName = $uidTypeName;
+    }
     
     
     
@@ -74,7 +116,7 @@ class SmallUidType extends Type
             return null;
         }
         
-        $className = static::getClassName();
+        $className = $this->getClassName();
         if (! is_a($className, SmallUid::class, true)) {
             throw new DatabaseToClassConversionError($className, SmallUid::class);
         }
@@ -91,13 +133,13 @@ class SmallUidType extends Type
     
     public function getName() : string
     {
-        return self::NAME;
+        return $this->typeName ?? self::NAME;
     }
     
     
-    protected static function getClassName() : string
+    public function getClassName() : string
     {
-        return SmallUid::class;
+        return $this->classFqcn ?? SmallUid::class;
     }
     
     
